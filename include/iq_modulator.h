@@ -4,9 +4,9 @@
 # include "netplus.h"
 
 // Implements a IQ modulator.
-class IQModulator : public Block {
+class IqModulator : public Block {
  public:
-	 IQMOdulator(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
+	 IqModulator(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
 	 bool runBlock(void);
  //private:
 };

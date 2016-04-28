@@ -9,8 +9,8 @@
 # include <algorithm> 
 # include <random>
 
-# include "..\include\netplus.h"
-# include "..\include\binary_source.h"
+# include "netplus.h"
+# include "binary_source.h"
 
 using namespace std;
 

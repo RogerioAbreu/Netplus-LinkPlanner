@@ -1,192 +1,13 @@
+# include <algorithm>	// std::min
+
 # include "netplus.h"
+# include "iq_modulator.h"
 
 
 using namespace std;
 
-//########################################################################################################################################################
-//######################################################### SIGNALS FUNCTIONS IMPLEMENTATION #############################################################
-//########################################################################################################################################################
 
-void Signal::close() {
-
-	if (inPosition >= firstValueToBeSaved) {
-		char *ptr = (char *)buffer;
-
-
-		ofstream fileHandler;
-		fileHandler.open("./signals/" + fileName, ios::out | ios::binary | ios::app);
-
-		if (type == "Binary") {
-			ptr = ptr + (firstValueToBeSaved - 1)*sizeof(t_binary);
-			fileHandler.write((char *)ptr, (inPosition - (firstValueToBeSaved - 1))*sizeof(t_binary));
-		}
-		else if (type == "TimeContinuousAmplitudeContinuousComplex") {
-			ptr = ptr + (firstValueToBeSaved - 1)*sizeof(t_complex);
-			fileHandler.write((char *)ptr, (inPosition - (firstValueToBeSaved - 1))*sizeof(t_complex));
-		}
-		else {
-			ptr = ptr + (firstValueToBeSaved - 1)*sizeof(t_real);
-			fileHandler.write((char *)ptr, (inPosition - (firstValueToBeSaved - 1))*sizeof(t_real));
-		}
-
-		fileHandler.close();
-	}
-};
-
-int Signal::space() {
-
-	if (bufferFull) return 0;
-
-	if (inPosition == outPosition) return bufferLength;
-
-	if (inPosition < outPosition) return (outPosition - inPosition);
-
-	if (outPosition >= 0) return (bufferLength - inPosition + outPosition);
-
-	if (outPosition == -1) return (bufferLength - inPosition);
-
-	return -1;
-};
-
-int Signal::ready() {
-
-	if (bufferEmpty) return 0;
-
-	if (outPosition == inPosition) {
-		return bufferLength;
-	}
-	else {
-		if (outPosition == -1) return 0;
-		if (inPosition > outPosition) {
-			return (inPosition - outPosition);
-		}
-		else {
-			return (bufferLength - outPosition + inPosition + 1);
-		}
-
-	}
-};
-
-void Signal::writeHeader(){
-
-	string signalPath{ "signals" };
-
-	ofstream headerFile;
-
-	if (!fileName.empty()) {
-
-		headerFile.open("./" + signalPath + "/" + fileName, ios::out);
-
-		headerFile << "Signal type: " << type << "\n";
-		headerFile << "Symbol Period (s): " << symbolPeriod << "\n";
-		headerFile << "Sampling Period (s): " << samplingPeriod << "\n";
-
-		headerFile << "// ### HEADER TERMINATOR ###\n";
-
-		headerFile.close();
-	}
-
-
-};
-
-void Signal::writeHeader(string signalPath){
-
-	ofstream headerFile;
-
-	if (!fileName.empty()) {
-
-		headerFile.open("./" + signalPath + "/" + fileName, ios::out);
-
-		headerFile << "Signal type: " << type << "\n";
-		headerFile << "Symbol Period (s): " << symbolPeriod << "\n";
-		headerFile << "Sampling Period (s): " << samplingPeriod << "\n";
-
-		headerFile << "// ### HEADER TERMINATOR ###\n";
-
-		headerFile.close();
-	}
-
-
-};
-
-
-
-
-
-
-
-//########################################################################################################################################################
-//###################################################### GENERAL BLOCKS FUNCTIONS IMPLEMENTATION #########################################################
-//########################################################################################################################################################
-
-
-
-void Block::terminateBlock(void) {
-
-  for (int i = 0; i < numberOfInputSignals; i++)
-    inputSignals[i]->close();
-
-}
-
-bool Block::runBlock(void) {
-	return false;
-}
-
-
-DiscreteToContinuousTime::DiscreteToContinuousTime(vector<Signal *> &InputSig, vector<Signal *> &OutputSig) {
-
-  numberOfInputSignals = InputSig.size();
-  numberOfOutputSignals = OutputSig.size();
-
-  inputSignals = InputSig;
-  outputSignals = OutputSig;
-
-  outputSignals[0]->symbolPeriod = (inputSignals[0]->symbolPeriod);
-  outputSignals[0]->samplingPeriod = (inputSignals[0]->samplingPeriod) / numberOfSamplesPerSymbol;
-
-  
-}
-
-bool DiscreteToContinuousTime::runBlock(void) {
-
-	bool alive{ false };
-
-	int ready = inputSignals[0]->ready();
-	int space = outputSignals[0]->space();
-
-	if (index != 0) {
-		for (int i = index; (i < numberOfSamplesPerSymbol) & (space>0); i++) {
-			outputSignals[0]->bufferPut(0);
-			alive = true;
-			space--;
-			index++;
-		};
-		if (index == numberOfSamplesPerSymbol) index = 0;
-	};
-
-	int length = min((int)ceil((double) space / (double)numberOfSamplesPerSymbol), ready);
-
-	if (length <= 0) return alive;
-
-	for (int i = 0; i < length; i++) {
-		t_real value = (t_real)(static_cast<TimeDiscreteAmplitudeDiscreteReal *>(inputSignals[0]))->bufferGet();
-		outputSignals[0]->bufferPut(value);
-		space--;
-		index++;
-		for (int k = 1; (k<numberOfSamplesPerSymbol) & (space>0); k++) {
-			outputSignals[0]->bufferPut((t_real) 0.0);
-			space--;
-			index++;
-		}
-		if (index == numberOfSamplesPerSymbol) index = 0;
-	}
-
-	return true;
-
-}
-
-
-RealToComplex::RealToComplex(vector <Signal *> &InputSig, vector <Signal *> &OutputSig) {
+IqModulator::IqModulator(vector <Signal *> &InputSig, vector <Signal *> &OutputSig) {
 
   numberOfInputSignals = InputSig.size();
   numberOfOutputSignals = OutputSig.size();
@@ -198,7 +19,7 @@ RealToComplex::RealToComplex(vector <Signal *> &InputSig, vector <Signal *> &Out
   outputSignals[0]->samplingPeriod = inputSignals[0]->samplingPeriod;
 }
 
-bool RealToComplex::runBlock(void) {
+bool IqModulator::runBlock(void) {
 
 	int ready0 = inputSignals[0]->ready();
 	int ready1 = inputSignals[1]->ready();
@@ -403,57 +224,4 @@ bool RealToComplex::runBlock(void) {
 //
 //}
 //
-
-
-
-System::System(vector<Block *> &Blocks) {
-
-	SystemBlocks = Blocks;
-
-}
-
-void System::run() {
-
-	for (int unsigned i = 0; i < SystemBlocks.size(); i++) {
-		for (int unsigned j = 0; j<(SystemBlocks[i]->inputSignals).size(); j++) {
-			(SystemBlocks[i]->inputSignals[j])->writeHeader();
-		}
-	}
-
-	bool Alive;
-	do {
-		Alive = false;
-		for (unsigned int i = 0; i < SystemBlocks.size(); i++) {
-			bool aux = SystemBlocks[i]->runBlock();
-			Alive = (Alive || aux);
-		}
-	} while (Alive);
-
-	for (int unsigned i = 0; i < SystemBlocks.size(); i++) {
-		SystemBlocks[i]->terminateBlock();
-	}
-}
-
-void System::run(string signalPath) {
-
-	// The signalPath sub-folder must already exists
-
-	for (int unsigned i = 0; i < SystemBlocks.size(); i++) {
-		for (int unsigned j = 0; j<(SystemBlocks[i]->inputSignals).size(); j++) {
-			(SystemBlocks[i]->inputSignals[j])->writeHeader(signalPath);
-		}
-	}
-
-	bool Alive;
-	do {
-		Alive = false;
-		for (unsigned int i = 0; i < SystemBlocks.size(); i++) {
-			Alive = Alive || SystemBlocks[i]->runBlock();
-		}
-	} while (Alive);
-
-	for (int unsigned i = 0; i < SystemBlocks.size(); i++) {
-		SystemBlocks[i]->terminateBlock();
-	}
-}
 

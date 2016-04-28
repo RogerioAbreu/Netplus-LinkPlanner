@@ -268,6 +268,13 @@ public:
 class BandpassSignal : public TimeContinuousAmplitudeContinuousComplex {
 
 public:
+
+	BandpassSignal(string fName) { setType("BandpassSignal"); setFileName(fName); buffer = new t_complex[bufferLength]; }
+	BandpassSignal(string fName, int bLength) { setType("BandpassSignal"); setFileName(fName); setBufferLength(bLength); buffer = new t_complex[bLength]; }
+	BandpassSignal(int bLength) { setType("BandpassSignal"); setBufferLength(bLength); buffer = new t_complex[bLength]; }
+	BandpassSignal(){ setType("BandpassSignal"); if (buffer == nullptr) buffer = new t_complex[bufferLength]; }
+
+
 	void setCentralFrequency(double cFrequency){ centralFrequency = cFrequency; centralWavelength = SPEED_OF_LIGHT / centralFrequency; }
 	double getCentralFrequency(){ return centralFrequency; };
 
