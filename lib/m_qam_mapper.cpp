@@ -8,8 +8,8 @@
 # include <vector>
 # include <algorithm>
 
-# include "..\include\netplus.h"
-# include "..\include\m_qam_mapper.h"
+# include "netplus.h"
+# include "m_qam_mapper.h"
 
 
 using namespace std;
@@ -37,7 +37,7 @@ bool MQamMapper::runBlock(void) {
 	int space1 = outputSignals[0]->space();
 	int space2 = outputSignals[1]->space();
 	int space = (space1 <= space2) ? space1 : space2;
-	int length = min(ready, 2*space);
+	int length = (ready <= (2 * space)) ? ready : space; // equivalent to min(ready, 2 * space);
 
 	if (length <= 0) return false;
 
@@ -45,10 +45,7 @@ bool MQamMapper::runBlock(void) {
 		reg[inReg] = static_cast<Binary *>(inputSignals[0])->bufferGet();
 		inReg++;
 		if (inReg == 2) {
-			if (reg[0] == 0)
-				outputSignals[0]->bufferPut(amplitude);
-			else
-				outputSignals[0]->bufferPut(-amplitude);
+			reg[0] == 0 ? outputSignals[0]->bufferPut(amplitude) : outputSignals[0]->bufferPut(-amplitude);
 			reg[1] == 0 ? outputSignals[1]->bufferPut(amplitude) : outputSignals[1]->bufferPut(-amplitude);
 			inReg = 0;
 		}

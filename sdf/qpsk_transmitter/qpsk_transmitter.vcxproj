@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)\..\include;</IncludePath>
+    <IncludePath>C:\Universidade\Investigacao\Netplus\GitHub\Netplus\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\binary_source.cpp" />
+    <ClCompile Include="..\..\lib\iq_modulator.cpp" />
     <ClCompile Include="..\..\lib\m_qam_mapper.cpp" />
     <ClCompile Include="..\..\lib\netplus.cpp" />
     <ClCompile Include="..\..\lib\pulse_shaper.cpp" />
@@ -86,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\binary_source.h" />
+    <ClInclude Include="..\..\include\iq_modulator.h" />
     <ClInclude Include="..\..\include\m_qam_mapper.h" />
     <ClInclude Include="..\..\include\netplus.h" />
     <ClInclude Include="..\..\include\sink.h" />
