@@ -10,6 +10,7 @@
 using namespace std;
 
 typedef unsigned int t_binary;
+typedef int t_integer;
 typedef double t_real;
 typedef complex<double> t_complex;
 

@@ -1486,9 +1486,10 @@ switch action
             activeSignals = get(findobj('Tag', 'list1'), 'Value');
             tc1 = 'TimeContinuousAmplitudeDiscreteComplex';
             tc2 = 'TimeContinuousAmplitudeContinuousComplex';
+            tc5 = 'BandpassSignal';
             signalBrowser = findobj('Tag', 'SignalBrowser');
             if isempty(signalBrowser)
-                if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) 
+                if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) || strcmp(signals(activeSignals(1)).type, tc5)
                     viewComplex;
                 else
                     defaultVerb(varargin{2}, varargin{3});
@@ -1498,7 +1499,7 @@ switch action
                     setGlobalchoice(0);
                 end
             else
-                if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) 
+                if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) || strcmp(signals(activeSignals(1)).type, tc5)
                     viewComplex;
                 end
             end           
@@ -1694,6 +1695,7 @@ switch action
             activeSignals = get(findobj('Tag', 'list1'), 'Value');
             tc1 = 'TimeContinuousAmplitudeDiscreteComplex';
             tc2 = 'TimeContinuousAmplitudeContinuousComplex';
+            tc5 = 'BandpassSignal';
             if isempty(signalBrowser) 
                 if length(getGlobalchoice) == length(choicer)
                     if getGlobalchoice == choicer
@@ -1704,7 +1706,7 @@ switch action
                 % Delete old "stems"
                 delete(findobj('Tag', 'st1'));
                 % View
-                if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) 
+                if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) || strcmp(signals(activeSignals(1)).type, tc5) 
                     viewComplex(1);
                 else
                     sptoolfig = findobj(0, 'Tag', 'sptool');
@@ -2593,6 +2595,7 @@ set(findobj('Tag', 'sigbrowser.sigbrowseAdapter:view'), 'Enable', 'on');
 %% Update "list1" and complex pushbuttons
 tc1 = 'TimeContinuousAmplitudeDiscreteComplex';
 tc2 = 'TimeContinuousAmplitudeContinuousComplex'; 
+tc5 = 'BandpassSignal';
 activeSignals = get(findobj('Tag', 'list1'), 'Value');
 N = length(activeSignals);
 signals = sptool('Signals');  
@@ -2600,7 +2603,7 @@ signals = sptool('Signals');
 inc = 1;
 indComplex = zeros(1, N);
 for k = 1:N
-    if strcmp(signals(activeSignals(k)).type, tc1) || strcmp(signals(activeSignals(k)).type, tc2)
+    if strcmp(signals(activeSignals(k)).type, tc1) || strcmp(signals(activeSignals(k)).type, tc2) || strcmp(signals(activeSignals(k)).type, tc5)
         indComplex(inc) = activeSignals(k);
         inc = inc + 1;
     end
@@ -2841,6 +2844,7 @@ N = length(activeSignals);
 signals = sptool('Signals');
 tc1 = 'TimeContinuousAmplitudeDiscreteComplex';
 tc2 = 'TimeContinuousAmplitudeContinuousComplex';
+tc5 = 'BandpassSignal';
 for k = 1:N
     nSamples = signals(activeSignals(k)).SPTIdentifier.version;
     x = signals(activeSignals(k)).data;
@@ -2848,7 +2852,7 @@ for k = 1:N
     period = 2; % Number of represented periods
     offset = 0; % Diagram offset
     eyediagram(x, n, period, offset); 
-    if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) 
+    if strcmp(signals(activeSignals(1)).type, tc1) || strcmp(signals(activeSignals(1)).type, tc2) || strcmp(signals(activeSignals(1)).type, tc5) 
         subplot(2, 1, 1);
         title(strjoin({'Eye Diagram for In-Phase', signals(activeSignals(k)).label}, ' '));
         xlabel('t / T');
@@ -3510,8 +3514,9 @@ td1 = 'TimeDiscreteAmplitudeDiscreteReal';
 td2 = 'TimeDiscreteAmplitudeContinuousReal';
 tc1 = 'TimeContinuousAmplitudeDiscreteComplex';
 tc2 = 'TimeContinuousAmplitudeContinuousComplex';
+tc5 = 'BandpassSignal';
 if N == 1 
-    if ~strcmp(signals(activeSignals(1)).type, tc1) && ~strcmp(signals(activeSignals(1)).type, tc2)
+    if ~strcmp(signals(activeSignals(1)).type, tc1) && ~strcmp(signals(activeSignals(1)).type, tc2) && ~strcmp(signals(activeSignals(1)).type, tc5)
         xlim = get(findobj('Tag', 'DisplayAxes1_RealMag'), 'XLim');
         xPan = xlim(2);
         if strcmp(signals(activeSignals(1)).type, td1) || strcmp(signals(activeSignals(1)).type, td2)
@@ -4131,6 +4136,7 @@ tc1 = 'TimeDiscreteAmplitudeDiscreteComplex';
 tc2 = 'TimeDiscreteAmplitudeContinuousComplex';
 tc3 = 'TimeContinuousAmplitudeDiscreteComplex';
 tc4 = 'TimeContinuousAmplitudeContinuousComplex';
+tc5 = 'BandpassSignal';
 
 %% Get global variable "nRead"
 nReadr = getGlobalnRead;
@@ -4163,7 +4169,7 @@ if strcmp(type, tb) % Binary signals
     end 
     data = vect;
 else 
-    if strcmp(type, tc1) || strcmp(type, tc2) || strcmp(type, tc3) || strcmp(type, tc4) % Complex signals
+    if strcmp(type, tc1) || strcmp(type, tc2) || strcmp(type, tc3) || strcmp(type, tc4) || strcmp(type, tc5)% Complex signals
         data = fread(fid, 2*double(nSamples)*nReadr, t_complexr);
         data = data(1:2:end) + 1i.*data(2:2:end);
         data = real(data)' + imag(data)'.*1i;

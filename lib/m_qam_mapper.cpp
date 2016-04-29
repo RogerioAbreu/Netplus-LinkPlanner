@@ -36,18 +36,19 @@ bool MQamMapper::runBlock(void) {
 	int ready = inputSignals[0]->ready();
 	int space1 = outputSignals[0]->space();
 	int space2 = outputSignals[1]->space();
+
 	int space = (space1 <= space2) ? space1 : space2;
 	int length = (ready <= (2 * space)) ? ready : space; // equivalent to min(ready, 2 * space);
 
 	if (length <= 0) return false;
 
 	for (int i = 0; i < length; i++) {
-		reg[inReg] = static_cast<Binary *>(inputSignals[0])->bufferGet();
-		inReg++;
-		if (inReg == 2) {
-			reg[0] == 0 ? outputSignals[0]->bufferPut(amplitude) : outputSignals[0]->bufferPut(-amplitude);
-			reg[1] == 0 ? outputSignals[1]->bufferPut(amplitude) : outputSignals[1]->bufferPut(-amplitude);
-			inReg = 0;
+		binaryValue[auxBinaryValue] = static_cast<Binary *>(inputSignals[0])->bufferGet();
+		auxBinaryValue++;
+		if (auxBinaryValue == m) {
+			binaryValue[0] == 0 ? outputSignals[0]->bufferPut(amplitude) : outputSignals[0]->bufferPut(-amplitude);
+			binaryValue[1] == 0 ? outputSignals[1]->bufferPut(amplitude) : outputSignals[1]->bufferPut(-amplitude);
+			auxBinaryValue = 0;
 		}
 	}
 
