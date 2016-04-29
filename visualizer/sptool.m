@@ -2729,8 +2729,8 @@ if strcmp(signals(activeSignals(1)).type, tb)
     factor = 200;
     set(currentAxes, 'XLim', [0 ((nSymbolsr*factor) - 1)*(1/signals(activeSignals(1)).Fs)]); 
 else
-    nSamples = double(signals(activeSignals(1)).SPTIdentifier.version);
-    set(currentAxes, 'XLim', [0 ((nSymbolsr*nSamples) - 1)*(1/signals(activeSignals(1)).Fs)]);
+    samplesPerSymbol = double(signals(activeSignals(1)).SPTIdentifier.version);
+    set(currentAxes, 'XLim', [0 ((nSymbolsr*samplesPerSymbol) - 1)*(1/signals(activeSignals(1)).Fs)]);
 end
 xl = get(currentAxes, 'XLabel');
 if strcmp('Time (ns)', get(xl, 'String'))
@@ -2846,9 +2846,9 @@ tc1 = 'TimeContinuousAmplitudeDiscreteComplex';
 tc2 = 'TimeContinuousAmplitudeContinuousComplex';
 tc5 = 'BandpassSignal';
 for k = 1:N
-    nSamples = signals(activeSignals(k)).SPTIdentifier.version;
+    samplesPerSymbol = signals(activeSignals(k)).SPTIdentifier.version;
     x = signals(activeSignals(k)).data;
-    n = 2*nSamples; % Number of samples in each trace
+    n = 2*samplesPerSymbol; % Number of samples in each trace
     period = 2; % Number of represented periods
     offset = 0; % Diagram offset
     eyediagram(x, n, period, offset); 
@@ -2894,9 +2894,9 @@ for k = 1:N
     obj1 = findobj('Tag', sprintf('DisplayLine%u', k));
     obj2 = findobj('Tag', sprintf('DisplayLine%u_Imag', k));
     color = get(obj1, 'Color');
-    %nSamples = signals(activeSignals(k)).SPTIdentifier.version;
-    %set(obj1, 'XData', real(signals(activeSignals(k)).data(1:nSamples:end)), 'YData', imag(signals(activeSignals(k)).data(1:nSamples:end)), 'LineStyle', 'none', 'Marker', 'o','MarkerSize', 2, 'MarkerFaceColor', color, 'Linewidth', lw);
-    set(obj1 ,'XData' , real(signals(activeSignals(k)).data), 'YData', imag(signals(activeSignals(k)).data), 'LineStyle', 'none', 'Marker', 'o', 'MarkerSize', 2, 'MarkerFaceColor', color, 'Linewidth', lw);
+    samplesPerSymbol = signals(activeSignals(k)).SPTIdentifier.version;
+    set(obj1, 'XData', real(signals(activeSignals(k)).data(1:samplesPerSymbol:end)), 'YData', imag(signals(activeSignals(k)).data(1:samplesPerSymbol:end)), 'LineStyle', 'none', 'Marker', 'o','MarkerSize', 2, 'MarkerFaceColor', color, 'Linewidth', lw);
+    %set(obj1 ,'XData' , real(signals(activeSignals(k)).data), 'YData', imag(signals(activeSignals(k)).data), 'LineStyle', 'none', 'Marker', 'o', 'MarkerSize', 2, 'MarkerFaceColor', color, 'Linewidth', lw);
     set(obj2,'Visible','off');        
 end
 
@@ -3149,11 +3149,11 @@ if nFiles > 0
             if flagT == 1
                 nValidFiles = nValidFiles + 1;
                 % Number of samples per period
-                nSamples = int64(symbolPeriod/samplingPeriod);
+                samplesPerSymbol = int64(symbolPeriod/samplingPeriod);
                 % Read data
                 [data, samplingFrequency] = readSignalData(fid, type, symbolPeriod, samplingPeriod);
                 % Load signal file information to sptool
-                loadSignal(data, samplingFrequency, type, nSamples, name);                
+                loadSignal(data, samplingFrequency, type, samplesPerSymbol, name);                
             else
                 % Error message
                 fprintf('Error: "%s" without terminator!\n', fileName);
@@ -3265,11 +3265,11 @@ if nFiles > 0
             if flagT == 1
                 nValidFiles = nValidFiles + 1;
                 % Number of samples per period
-                nSamples = int64(symbolPeriod/samplingPeriod);
+                samplesPerSymbol = int64(symbolPeriod/samplingPeriod);
                 % Read data
                 [data, samplingFrequency] = readSignalData(fid, type, symbolPeriod, samplingPeriod);
                 % Load signal file information to sptool
-                loadSignal(data, samplingFrequency, type, nSamples, name);                
+                loadSignal(data, samplingFrequency, type, samplesPerSymbol, name);                
             else
                 % Error message
                 fprintf('Error: "%s" without terminator!\n', fileName);
@@ -3405,11 +3405,11 @@ if nFiles > 0
             if flagT == 1
                 nValidFiles = nValidFiles + 1;
                 % Number of samples per period
-                nSamples = int64(symbolPeriod/samplingPeriod);
+                samplesPerSymbol = int64(symbolPeriod/samplingPeriod);
                 % Read data
                 [data, samplingFrequency] = readSignalData(fid, type, symbolPeriod, samplingPeriod);
                 % Load signal file information to sptool
-                loadSignal(data, samplingFrequency, type, nSamples, name);                
+                loadSignal(data, samplingFrequency, type, samplesPerSymbol, name);                
             else
                 % Error message
                 fprintf('Error: "%s" without terminator!\n', fileName);
@@ -3550,13 +3550,13 @@ if N == 1
                         % Read data
                         [ynew, ~] = readSignalData(fid, tb, ts*factor, ts*factor);
                     else
-                        nSamples = signals(activeSignals(1)).SPTIdentifier.version;
-                        nShownSymbols = ((xend/ts) + 1)/nSamples;
+                        samplesPerSymbol = signals(activeSignals(1)).SPTIdentifier.version;
+                        nShownSymbols = ((xend/ts) + 1)/samplesPerSymbol;
                         for k = 1:nShownSymbols
-                            fread(fid, double(nSamples)*1, t_realr);
+                            fread(fid, double(samplesPerSymbol)*1, t_realr);
                         end
                         % Read data
-                        [ynew, ~] = readSignalData(fid, signals(activeSignals(1)).type, ts*double(nSamples), ts);
+                        [ynew, ~] = readSignalData(fid, signals(activeSignals(1)).type, ts*double(samplesPerSymbol), ts);
                     end
                     % Update
                     xnew = xend + ts:ts:xend + ts*length(ynew);
@@ -3596,7 +3596,7 @@ if N == 1
                 [~, ~, ~, flagT] = readSignalHeader(fid); 
                 if flagT == 1
                     ts = 1/signals(activeSignals(1)).Fs;
-                    nSamples = signals(activeSignals(1)).SPTIdentifier.version;
+                    samplesPerSymbol = signals(activeSignals(1)).SPTIdentifier.version;
                 else
                     % Error message
                     fprintf('Error: "%s" without terminator!\n', fileName);
@@ -3606,22 +3606,22 @@ if N == 1
         if xPanr > xendr
             if flagT == 1 && fid ~= -1
                 ydatar = get(curveReal, 'YData');
-                nShownSymbols = ((xendr/ts) + 1)/nSamples;
+                nShownSymbols = ((xendr/ts) + 1)/samplesPerSymbol;
             end
         end
         if xPani > xendi
             if flagT == 1 && fid ~= -1
                 ydatai = get(curveImag, 'YData');
-                nShownSymbols = ((xendi/ts) + 1)/nSamples;
+                nShownSymbols = ((xendi/ts) + 1)/samplesPerSymbol;
             end
         end
         if xPanr > xendr || xPani > xendi
             if flagT == 1 && fid ~= -1
                 for k = 1:nShownSymbols
-                    fread(fid, 2*double(nSamples)*1, t_complexr);
+                    fread(fid, 2*double(samplesPerSymbol)*1, t_complexr);
                 end
                 % Read data
-                [ynew, ~] = readSignalData(fid, signals(activeSignals(1)).type, ts*double(nSamples), ts);
+                [ynew, ~] = readSignalData(fid, signals(activeSignals(1)).type, ts*double(samplesPerSymbol), ts);
             end
         end
         if xPanr > xendr
@@ -4154,7 +4154,7 @@ t_complexr = getGlobalt_complex;
 samplingFrequency = 1/samplingPeriod;
 
 %% Number of samples per period
-nSamples = int64(symbolPeriod/samplingPeriod);
+samplesPerSymbol = int64(symbolPeriod/samplingPeriod);
 
 %% Read data
 if strcmp(type, tb) % Binary signals
@@ -4170,21 +4170,21 @@ if strcmp(type, tb) % Binary signals
     data = vect;
 else 
     if strcmp(type, tc1) || strcmp(type, tc2) || strcmp(type, tc3) || strcmp(type, tc4) || strcmp(type, tc5)% Complex signals
-        data = fread(fid, 2*double(nSamples)*nReadr, t_complexr);
+        data = fread(fid, 2*double(samplesPerSymbol)*nReadr, t_complexr);
         data = data(1:2:end) + 1i.*data(2:2:end);
         data = real(data)' + imag(data)'.*1i;
     else % Other signals  
-        data = fread(fid, double(nSamples)*nReadr, t_realr);
+        data = fread(fid, double(samplesPerSymbol)*nReadr, t_realr);
         data = data';
     end
 end
 %%
 
-function [ ] = loadSignal( data, samplingFrequency, type, nSamples, name )
+function [ ] = loadSignal( data, samplingFrequency, type, samplesPerSymbol, name )
 %LOADSIGNAL Loads a signal to "sptool"/"visualizer".
-%   LOADSIGNAL(data, samplingFrequency, type, nSamples, name)
+%   LOADSIGNAL(data, samplingFrequency, type, samplesPerSymbol, name)
 %   just loads a signal to simulator knowing the struct parameters
-%   ("data"; "samplingFrequency"; "type"; "nSamples" and name).
+%   ("data"; "samplingFrequency"; "type"; "samplesPerSymbol" and name).
 
 %% Some Standard types
 tb = 'Binary';
@@ -4204,7 +4204,7 @@ struct.type = type;
 %struct.lineinfo.columns = 1;
 %struct.SPTIdentifier.type = 'Signal';
 %struct.SPTIdentifier.version = '1.0';
-struct.SPTIdentifier.version = nSamples;
+struct.SPTIdentifier.version = samplesPerSymbol;
 %struct.label;
 sptool('load', struct);
 
