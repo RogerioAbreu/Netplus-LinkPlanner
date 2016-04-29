@@ -1,8 +1,9 @@
-# include "..\..\include\netplus.h"
-# include "..\..\include\binary_source.h"
-# include "..\..\include\m_qam_mapper.h"
-# include "..\..\include\pulse_shaper.h"
-# include "..\..\include\sink.h"
+# include "netplus.h"
+# include "binary_source.h"
+# include "m_qam_mapper.h"
+# include "pulse_shaper.h"
+# include "iq_modulator.h"
+# include "sink.h"
 
 int main(){
 
@@ -26,7 +27,7 @@ int main(){
 	TimeContinuousAmplitudeContinuousReal S7{ "S7.sgn" };
 	S7.setFirstValueToBeSaved(33);
 	
-	TimeContinuousAmplitudeContinuousComplex S8{ "S8.sgn" };
+	BandpassSignal S8{ "S8.sgn" };
 	S8.setFirstValueToBeSaved(33);
 
 	// #####################################################################################################
@@ -54,7 +55,7 @@ int main(){
 	PulseShaper B6{ vector<Signal*> { &S5 }, vector<Signal*> { &S7 } };
 	B6.setRollOffFactor(0.3);
 
-	RealToComplex B7{ vector<Signal*> { &S6, &S7 }, vector<Signal*> { &S8 } };
+	IqModulator B7{ vector<Signal*> { &S6, &S7 }, vector<Signal*> { &S8 } };
 
 	Sink B8{ vector<Signal*> { &S8 }, vector<Signal*> {} };
 
