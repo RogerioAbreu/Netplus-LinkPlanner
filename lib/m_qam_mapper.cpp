@@ -15,19 +15,20 @@
 using namespace std;
 
 MQamMapper::MQamMapper(vector<Signal *> &InputSig, vector<Signal *> &OutputSig) {
-     
-  numberOfInputSignals = InputSig.size();
-  numberOfOutputSignals = OutputSig.size();
 
-  inputSignals = InputSig;
-  outputSignals = OutputSig;
- 
-  outputSignals[0]->symbolPeriod = 2 * (inputSignals[0]->symbolPeriod);
-  outputSignals[0]->samplingPeriod = 2 * inputSignals[0]->samplingPeriod;
+	numberOfInputSignals = InputSig.size();
+	numberOfOutputSignals = OutputSig.size();
 
-  outputSignals[1]->symbolPeriod = 2 * (inputSignals[0]->symbolPeriod);
-  outputSignals[1]->samplingPeriod = 2 * inputSignals[0]->samplingPeriod;
+	inputSignals = InputSig;
+	outputSignals = OutputSig;
 
+	outputSignals[0]->symbolPeriod = 2 * inputSignals[0]->symbolPeriod;
+	outputSignals[0]->samplingPeriod = 2 * inputSignals[0]->samplingPeriod;
+
+	outputSignals[1]->symbolPeriod = 2 * inputSignals[0]->symbolPeriod;
+	outputSignals[1]->samplingPeriod = 2 * inputSignals[0]->samplingPeriod;
+
+	setM(m);
 }
 
 bool MQamMapper::runBlock(void) {
@@ -42,16 +43,35 @@ bool MQamMapper::runBlock(void) {
 
 	if (length <= 0) return false;
 
+	int binaryValue;
+	int nBinaryValues = (int)log2(m);
 	for (int i = 0; i < length; i++) {
-		binaryValue[auxBinaryValue] = static_cast<Binary *>(inputSignals[0])->bufferGet();
+		binaryValue = static_cast<Binary *>(inputSignals[0])->bufferGet();
+		auxSignalNumber = auxSignalNumber + (int) pow(2, nBinaryValues - 1 - auxBinaryValue) * binaryValue;
 		auxBinaryValue++;
-		if (auxBinaryValue == m) {
-			binaryValue[0] == 0 ? outputSignals[0]->bufferPut(amplitude) : outputSignals[0]->bufferPut(-amplitude);
-			binaryValue[1] == 0 ? outputSignals[1]->bufferPut(amplitude) : outputSignals[1]->bufferPut(-amplitude);
+		if (auxBinaryValue == nBinaryValues) {
+			outputSignals[0]->bufferPut(iqAmplitudes[auxSignalNumber].i);
+			outputSignals[1]->bufferPut(iqAmplitudes[auxSignalNumber].q);
 			auxBinaryValue = 0;
+			auxSignalNumber = 0;
 		}
 	}
 
 	return true;
 }
 
+void MQamMapper::setIqAmplitudes(vector<t_iqValues> iqAmplitudesValues){
+	m = iqAmplitudesValues.size();
+	iqAmplitudes.resize(m);
+	iqAmplitudes = iqAmplitudesValues; 
+};
+
+void MQamMapper::setM(int mValue){
+	m = mValue;
+
+	iqAmplitudes.resize(m);
+	switch (m) {
+	case 4:
+		iqAmplitudes = { { 1.0, 1.0 }, { -1.0, 1.0 }, { -1.0, -1.0 }, { 1.0, -1.0 } };
+	};
+};
