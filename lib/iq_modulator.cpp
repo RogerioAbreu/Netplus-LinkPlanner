@@ -39,7 +39,6 @@ bool IqModulator::runBlock(void) {
 		complex<t_real> myComplex( re, im);
 
 		outputSignals[0]->bufferPut(myComplex);
-
 	}
 
 	return true;
