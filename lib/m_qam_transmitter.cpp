@@ -2,15 +2,22 @@
 
 MQamTransmitter::MQamTransmitter(vector<Signal *> &InputSig, vector<Signal *> &OutputSig){
 
-	
-	ModuleBlocks = { &B1, &B2, &B3, &B4, &B5, &B6, &B7 };
+	inputSignals = InputSig;
+	outputSignals = OutputSig;
 
+	outputSignals[0]->symbolPeriod = B7.outputSignals[0]->symbolPeriod;
+	outputSignals[0]->samplingPeriod = B7.outputSignals[0]->samplingPeriod;
+
+	ModuleBlocks = { &B1, &B2, &B3, &B4, &B5, &B6, &B7 };
 
 	for (int unsigned i = 0; i < ModuleBlocks.size(); i++) {
 		for (int unsigned j = 0; j<(ModuleBlocks[i]->inputSignals).size(); j++) {
 			(ModuleBlocks[i]->inputSignals[j])->writeHeader();
 		}
 	}
+
+	for (int unsigned j = 0; j<(ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals).size(); j++)
+		ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[j]->writeHeader();
 
 }
 
@@ -19,6 +26,9 @@ MQamTransmitter::~MQamTransmitter(void) {
 	for (int unsigned i = 0; i < ModuleBlocks.size(); i++) {
 		ModuleBlocks[i]->terminateBlock();
 	}
+
+	for (int unsigned j = 0; j<(ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals).size(); j++)
+		ModuleBlocks[ModuleBlocks.size()-1]->outputSignals[0]->close();
 }
 
 bool MQamTransmitter::runBlock() {
@@ -33,6 +43,13 @@ bool MQamTransmitter::runBlock() {
 			Continue = (Continue || aux);
 			Alive = (Alive || Continue);
 		}
+
+		int ready = ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0]->ready();
+		int space = outputSignals[0]->space();
+		int length = (ready <= space) ? ready : space; 
+		for (int i = 0; i < length; i++)
+			outputSignals[0]->bufferPut(static_cast<BandpassSignal *>(ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0])->bufferGet());
+
 	} while (Continue);
 
 	return Alive;
