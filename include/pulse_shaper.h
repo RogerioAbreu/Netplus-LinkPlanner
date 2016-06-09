@@ -10,21 +10,27 @@ using namespace std;
 equal to "numberOfTaps" and roll-off factor equal to "rollOff". */
 class PulseShaper : public Block {
 
-public:
-	PulseShaper(vector<Signal *> &InputSig, vector<Signal *> OutputSig);
-	
-	bool runBlock(void);
-	
-	double rollOffFactor{ 0.9 };// Roll-off factor (roll)
-	
-	int impulseResponseTimeLength{4};  //in units of symbol period
-
-	int impulseResponseLength;
-
+	/* State Variable */
 	vector<t_real> impulseResponse;
 	string impulseResponseFilename{ "pulse_shapper_impulse_response.imp" };
 
 	vector<t_real> response;
+
+public:
+
+	/* Input Parameters */
+
+	double rollOffFactor{ 0.9 };// Roll-off factor (roll)
+
+	int impulseResponseTimeLength{ 4 };  //in units of symbol period
+
+	int impulseResponseLength;
+
+	/* Methods */
+
+	PulseShaper(vector<Signal *> &InputSig, vector<Signal *> OutputSig);
+	
+	bool runBlock(void);
 	
 	void setRollOffFactor(double rOffFactor){ rollOffFactor = rOffFactor; };
 };

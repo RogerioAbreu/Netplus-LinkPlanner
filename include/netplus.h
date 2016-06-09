@@ -301,21 +301,23 @@ private:
 };
 
 //########################################################################################################################################################
-//########################################################## GENERIC BLOCKS DECLARATION AND DEFINITION ###################################################
+//########################################################## GENERIC BLOCK DECLARATIONS AND DEFINITIONS ##################################################
 //########################################################################################################################################################
 
 
 // Descrives a generic Block.
 class Block {
+
  public:
-  	 
-  void terminateBlock();
-  virtual bool runBlock();
-  
-  int numberOfInputSignals;  
-  int numberOfOutputSignals; 
-  vector<Signal *> inputSignals;
-  vector<Signal *> outputSignals;
+
+	/* Input Parameters */
+	int numberOfInputSignals;
+	int numberOfOutputSignals;
+	vector<Signal *> inputSignals;
+	vector<Signal *> outputSignals;
+
+	void terminateBlock();
+	virtual bool runBlock();
 };
 
 class DiscreteToContinuousTime : public Block {
@@ -344,6 +346,14 @@ class ComplexToReal : public Block {
   bool runBlock(void);
  //private:
 };
+
+
+
+
+//########################################################################################################################################################
+//########################################################## GENERIC SYSTEM DECLARATIONS AND DEFINITIONS #################################################
+//########################################################################################################################################################
+
 
 class System {
 

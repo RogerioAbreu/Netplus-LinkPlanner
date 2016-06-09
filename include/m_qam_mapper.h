@@ -15,7 +15,23 @@ struct t_iqValues {
 
 /* Realizes the M-QAM mapping. */
 class MQamMapper : public Block {
+
+	/* State Variables */
+
+	t_integer auxBinaryValue{ 0 };
+	t_integer auxSignalNumber{ 0 };
+
+
 public:
+
+	/* Input Parameters */
+
+	t_integer m{ 4 };
+	vector<t_iqValues> iqAmplitudes;
+
+
+	/* Methods */
+
 	MQamMapper(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
 
 	bool runBlock(void);
@@ -24,16 +40,6 @@ public:
 
 	void setIqAmplitudes(vector<t_iqValues> iqAmplitudesValues);
 
-private:
-	
-	/* Input Parameters */
-	t_integer m{ 4 };
-	vector<t_iqValues> iqAmplitudes;
-
-	/* State Variables */
-	
-	t_integer auxBinaryValue{ 0 };
-	t_integer auxSignalNumber{ 0 };
 };
 
 #endif
