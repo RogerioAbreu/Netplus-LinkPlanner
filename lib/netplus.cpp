@@ -420,7 +420,6 @@ bool RealToComplex::runBlock(void) {
 
 
 
-
 System::System(vector<Block *> &Blocks) {
 
 	SystemBlocks = Blocks;

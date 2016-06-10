@@ -10,15 +10,6 @@ MQamTransmitter::MQamTransmitter(vector<Signal *> &InputSig, vector<Signal *> &O
 
 	ModuleBlocks = { &B1, &B2, &B3, &B4, &B5, &B6, &B7 };
 
-	for (int unsigned i = 0; i < ModuleBlocks.size(); i++) {
-		for (int unsigned j = 0; j<(ModuleBlocks[i]->inputSignals).size(); j++) {
-			(ModuleBlocks[i]->inputSignals[j])->writeHeader();
-		}
-	}
-
-	for (int unsigned j = 0; j<(ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals).size(); j++)
-		ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[j]->writeHeader();
-
 }
 
 MQamTransmitter::~MQamTransmitter(void) {
@@ -32,6 +23,24 @@ MQamTransmitter::~MQamTransmitter(void) {
 }
 
 bool MQamTransmitter::runBlock() {
+
+	if (firstTime) {
+
+		firstTime = false;
+
+		for (int unsigned i = 0; i < ModuleBlocks.size(); i++) {
+			for (int unsigned j = 0; j<(ModuleBlocks[i]->inputSignals).size(); j++) {
+				(ModuleBlocks[i]->inputSignals[j])->writeHeader();
+			}
+		}
+
+		for (int unsigned j = 0; j<(ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals).size(); j++)
+			ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[j]->writeHeader();
+
+		S6.setFirstValueToBeSaved( B5.impulseResponseLength + 1 );
+		S7.setFirstValueToBeSaved( B5.impulseResponseLength + 1 );
+		S8.setFirstValueToBeSaved( B5.impulseResponseLength + 1 );
+	}
 
 	bool Alive{ false };
 
@@ -55,4 +64,23 @@ bool MQamTransmitter::runBlock() {
 	return Alive;
 }
 
+
+void MQamTransmitter::setSaveSignals(bool sSignals) {
+	
+	if (sSignals) {
+		
+		saveSignals = true;
+
+		S1.setFileName("MQAM1.sgn");
+		S2.setFileName("MQAM2.sgn");
+		S3.setFileName("MQAM3.sgn");
+		S4.setFileName("MQAM4.sgn");
+		S5.setFileName("MQAM5.sgn");
+		S6.setFileName("MQAM6.sgn");
+		S7.setFileName("MQAM7.sgn");
+		S8.setFileName("MQAM8.sgn");
+	}
+
+	return;
+}
 

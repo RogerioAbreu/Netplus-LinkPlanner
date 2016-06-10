@@ -12,25 +12,27 @@
 
 class MQamTransmitter : public Block {
 
+	/* State Variables */
+
 	// #####################################################################################################
 	// ################## Internal Signals Declaration and Inicialization ##################################
 	// #####################################################################################################
 
-	Binary S1{ "M1.sgn" };
+	Binary S1;
 
-	TimeDiscreteAmplitudeDiscreteReal S2{ "M2.sgn" };
+	TimeDiscreteAmplitudeDiscreteReal S2;
 
-	TimeDiscreteAmplitudeDiscreteReal S3{ "M3.sgn" };
+	TimeDiscreteAmplitudeDiscreteReal S3;
 
-	TimeContinuousAmplitudeDiscreteReal S4{ "M4.sgn" };
+	TimeContinuousAmplitudeDiscreteReal S4;
 
-	TimeContinuousAmplitudeDiscreteReal S5{ "M5.sgn" };
+	TimeContinuousAmplitudeDiscreteReal S5;
 
-	TimeContinuousAmplitudeContinuousReal S6{ "M6.sgn" };
+	TimeContinuousAmplitudeContinuousReal S6;
 
-	TimeContinuousAmplitudeContinuousReal S7{ "M7.sgn" };
+	TimeContinuousAmplitudeContinuousReal S7;
 
-	BandpassSignal S8{ "M8.sgn" };
+	BandpassSignal S8;
 
 
 	// #####################################################################################################
@@ -52,16 +54,24 @@ class MQamTransmitter : public Block {
 
 	IqModulator B7{ vector<Signal*> { &S6, &S7 }, vector<Signal*> { &S8 } };
 
-	vector<Block*> ModuleBlocks;
 
+	vector<Block*> ModuleBlocks;
+	bool firstTime{ true };
 
 public:
 
+	/* Input Parameters */
+
+	bool saveSignals{ false };
+
 	/* Methods */
+
 	MQamTransmitter(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
 	~MQamTransmitter(void);
 
 	bool runBlock(void);
+
+	/* Set Methods */
 
 	void setMode(BinarySourceMode m) { B1.mode = m; }
 	void setProbabilityOfZero(double pZero) { B1.probabilityOfZero = pZero; }
@@ -76,6 +86,8 @@ public:
 	void setNumberOfSamplesPerSymbol(int n) { B3.numberOfSamplesPerSymbol = n;  B4.numberOfSamplesPerSymbol = n; };
 
 	void setRollOffFactor(double rOffFactor){ B5.rollOffFactor = rOffFactor; B6.rollOffFactor = rOffFactor; };
+
+	void setSaveSignals(bool sSignals);
 
 };
 

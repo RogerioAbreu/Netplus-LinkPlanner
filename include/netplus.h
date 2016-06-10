@@ -160,7 +160,7 @@ public:
 class Binary : public TimeDiscreteAmplitudeDiscrete {
 	
 public:
-	Binary(string fName) { setType("Binary");  setFileName(fName); buffer = new t_binary[bufferLength]; }
+	Binary(string fName) { setType("Binary");  setFileName(fName); if (buffer == nullptr) buffer = new t_binary[bufferLength]; }
 	Binary(string fName, int bLength) { setType("Binary");  setFileName(fName); setBufferLength(bLength); buffer = new t_binary[bLength]; }
 	Binary(int bLength) { setType("Binary");  setBufferLength(bLength); buffer = new t_binary[bLength]; }
 	Binary() { setType("Binary"); if (buffer == nullptr) buffer = new t_binary[bufferLength]; }
