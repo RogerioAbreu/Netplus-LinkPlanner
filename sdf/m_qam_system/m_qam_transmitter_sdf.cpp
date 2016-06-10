@@ -21,7 +21,7 @@ int main(){
 	B1.setNumberOfBits(10000);
 	B1.setNumberOfSamplesPerSymbol(16);
 	B1.setRollOffFactor(0.3);
-	B1.setSaveSignals(true);
+	B1.setSaveInternalSignals(false);
 
 	Sink B2{ vector<Signal*> { &S1 }, vector<Signal*> {} };
 

@@ -65,11 +65,11 @@ bool MQamTransmitter::runBlock() {
 }
 
 
-void MQamTransmitter::setSaveSignals(bool sSignals) {
+void MQamTransmitter::setSaveInternalSignals(bool sSignals) {
 	
 	if (sSignals) {
 		
-		saveSignals = true;
+		saveInternalSignals = true;
 
 		S1.setFileName("MQAM1.sgn");
 		S2.setFileName("MQAM2.sgn");

@@ -62,7 +62,7 @@ public:
 
 	/* Input Parameters */
 
-	bool saveSignals{ false };
+	bool saveInternalSignals{ false };
 
 	/* Methods */
 
@@ -87,7 +87,7 @@ public:
 
 	void setRollOffFactor(double rOffFactor){ B5.rollOffFactor = rOffFactor; B6.rollOffFactor = rOffFactor; };
 
-	void setSaveSignals(bool sSignals);
+	void setSaveInternalSignals(bool sSignals);
 
 };
 
