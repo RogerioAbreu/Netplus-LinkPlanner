@@ -23,36 +23,37 @@ PulseShaper::PulseShaper(vector<Signal *> &InputSig, vector<Signal *> OutputSig)
 
   outputSignals[0]->symbolPeriod = inputSignals[0]->symbolPeriod;
   outputSignals[0]->samplingPeriod = inputSignals[0]->samplingPeriod;
+
+  if (impulseResponse.size() == 0) {
+
+	  double samplingPeriod = outputSignals[0]->samplingPeriod;
+	  double symbolPeriod = outputSignals[0]->symbolPeriod;
+
+	  impulseResponseLength = (int)floor(impulseResponseTimeLength * symbolPeriod / samplingPeriod);
+
+	  impulseResponse.resize(impulseResponseLength);
+	  double t, sinc;
+	  ofstream fileHandler("./signals/" + impulseResponseFilename, ios::out);
+	  fileHandler << "// ### HEADER TERMINATOR ###\n";
+	  for (int i = 0; i < impulseResponseLength; i++) {
+		  t = -impulseResponseLength / 2 * samplingPeriod + i * samplingPeriod;
+		  if (t != 0) {
+			  sinc = sin(PI * t / symbolPeriod) / (PI * t / symbolPeriod);
+		  }
+		  else {
+			  sinc = 1;
+		  }
+		  impulseResponse[i] = sinc*cos(rollOffFactor*PI*t / symbolPeriod) / (1 - (4.0 * rollOffFactor * rollOffFactor * t * t) / (symbolPeriod * symbolPeriod));
+		  fileHandler << t << " " << impulseResponse[i] << "\n";
+	  };
+	  fileHandler.close();
+
+	  response.resize(impulseResponseLength, 0);
+  };
+
 }
 
 bool PulseShaper::runBlock(void) {
-
-	if (impulseResponse.size() == 0) {
-
-		double samplingPeriod = outputSignals[0]->samplingPeriod;
-		double symbolPeriod = outputSignals[0]->symbolPeriod;
-
-		impulseResponseLength = (int) floor(impulseResponseTimeLength * symbolPeriod / samplingPeriod);
-
-		impulseResponse.resize(impulseResponseLength);
-		double t, sinc;
-		ofstream fileHandler("./signals/" + impulseResponseFilename, ios::out);
-		fileHandler << "// ### HEADER TERMINATOR ###\n";
-		for (int i = 0; i < impulseResponseLength; i++) {
-			t = -impulseResponseLength / 2 * samplingPeriod + i * samplingPeriod;
-			if (t != 0) {
-				sinc = sin(PI * t / symbolPeriod) / (PI * t / symbolPeriod);
-			}
-			else {
-				sinc = 1;
-			}
-			impulseResponse[i] = sinc*cos(rollOffFactor*PI*t / symbolPeriod) / (1 - (4.0 * rollOffFactor * rollOffFactor * t * t) / (symbolPeriod * symbolPeriod));
-			fileHandler << t << " " << impulseResponse[i] << "\n";
-		};
-		fileHandler.close();
-
-		response.resize(impulseResponseLength, 0);
-	};
 
 	int ready = inputSignals[0]->ready();
 	int space = outputSignals[0]->space();

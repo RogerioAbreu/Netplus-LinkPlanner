@@ -23,22 +23,23 @@ double bitPeriod{ 1.0 / 100e9 };
 */ 
 class BinarySource : public Block {
 
-	// Input parameters
-	
-	BinarySourceMode mode{ PseudoRandom };
-
-	double probabilityOfZero{ 0.5 };
-	int patternLength{ 7 };
-	string bitStream{ "01" };
-
-	long int numberOfBits{ -1 };
-	double bitPeriod{ 1.0 / 100e9 };
-
 	// State variables
 	std::vector<int> acumul;
 	int posBitStream{ 0 };
 
  public:
+
+	 // Input parameters
+
+	 BinarySourceMode mode{ PseudoRandom };
+
+	 double probabilityOfZero{ 0.5 };
+	 int patternLength{ 7 };
+	 string bitStream{ "01" };
+
+	 long int numberOfBits{ -1 };
+	 double bitPeriod{ 1.0 / 100e9 };
+
 
 	// Methods
 	BinarySource(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
