@@ -21,6 +21,7 @@ int main(){
 	B1.setNumberOfBits(10000);
 	B1.setNumberOfSamplesPerSymbol(16);
 	B1.setRollOffFactor(0.3);
+	B1.setIqAmplitudes({ { 1, 0 }, { -1, 0 } });
 	B1.setSaveInternalSignals(true);
 
 	Sink B2{ vector<Signal*> { &S1 }, vector<Signal*> {} };

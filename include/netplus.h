@@ -27,6 +27,7 @@ const double SPEED_OF_LIGHT = 299792458;
 //############################################################## SIGNALS DECLARATION AND DEFINITION ######################################################
 //########################################################################################################################################################
 
+
 // Root class for signals
 class Signal {
 							
@@ -64,6 +65,16 @@ public:
 		}
 		if (inPosition == outPosition) bufferFull = true;
 	};
+
+/*	template<class T>
+	T * bufferGet() {
+		T value = static_cast<T *>(buffer)[outPosition];
+		if (bufferFull) bufferFull = false;
+		outPosition++;
+		if (outPosition == bufferLength) outPosition = 0;
+		if (outPosition == inPosition) bufferEmpty = true;
+		return (value);
+	}*/
 
 	void setType(string sType) { type = sType; };
 	string getType(){ return type; };
@@ -245,7 +256,7 @@ public:
 		if (outPosition == bufferLength) outPosition = 0;
 		if (outPosition == inPosition) bufferEmpty = true;
 		return (value);
-	};
+	}
 };
 
 
@@ -263,7 +274,7 @@ public:
 		if (outPosition == bufferLength) outPosition = 0;
 		if (outPosition == inPosition) bufferEmpty = true;
 		return (value);
-	};
+	}
 };
 
 class BandpassSignal : public TimeContinuousAmplitudeContinuousComplex {
