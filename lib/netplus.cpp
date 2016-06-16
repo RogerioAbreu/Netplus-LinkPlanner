@@ -7,7 +7,7 @@
 # include <strstream>
 # include <algorithm>
 
-# include "..\include\netplus.h"
+# include "netplus.h"
 
 
 using namespace std;
@@ -118,8 +118,49 @@ void Signal::writeHeader(string signalPath){
 
 };
 
+void Signal::bufferGet() {
+	if (bufferFull) bufferFull = false;
+	outPosition++;
+	if (outPosition == bufferLength) outPosition = 0;
+	if (outPosition == inPosition) bufferEmpty = true;
+	return;
+};
 
+void Signal::bufferGet(t_binary *valueAddr) {
+	*valueAddr = static_cast<t_binary *>(buffer)[outPosition];
+	if (bufferFull) bufferFull = false;
+	outPosition++;
+	if (outPosition == bufferLength) outPosition = 0;
+	if (outPosition == inPosition) bufferEmpty = true;
+	return;
+};
 
+void Signal::bufferGet(t_integer *valueAddr) {
+	*valueAddr = static_cast<t_integer *>(buffer)[outPosition];
+	if (bufferFull) bufferFull = false;
+	outPosition++;
+	if (outPosition == bufferLength) outPosition = 0;
+	if (outPosition == inPosition) bufferEmpty = true;
+	return;
+};
+
+void Signal::bufferGet(t_real *valueAddr) {
+	*valueAddr = static_cast<t_real *>(buffer)[outPosition];
+	if (bufferFull) bufferFull = false;
+	outPosition++;
+	if (outPosition == bufferLength) outPosition = 0;
+	if (outPosition == inPosition) bufferEmpty = true;
+	return;
+};
+
+void Signal::bufferGet(t_complex *valueAddr) {
+	*valueAddr = static_cast<t_complex *>(buffer)[outPosition];
+	if (bufferFull) bufferFull = false;
+	outPosition++;
+	if (outPosition == bufferLength) outPosition = 0;
+	if (outPosition == inPosition) bufferEmpty = true;
+	return;
+};
 
 
 
@@ -178,7 +219,8 @@ bool DiscreteToContinuousTime::runBlock(void) {
 	if (length <= 0) return alive;
 
 	for (int i = 0; i < length; i++) {
-		t_real value = (t_real)(static_cast<TimeDiscreteAmplitudeDiscreteReal *>(inputSignals[0]))->bufferGet();
+		t_real value;
+		(inputSignals[0])->bufferGet(&value);
 		outputSignals[0]->bufferPut(value);
 		space--;
 		index++;
@@ -219,10 +261,12 @@ bool RealToComplex::runBlock(void) {
 
 	if (process == 0) return false;
 
+	t_real re;
+	t_real im;
 	for (int i = 0; i < process; i++) {
 
-		t_real re = static_cast<TimeContinuousAmplitudeContinuousReal *>(inputSignals[0])->bufferGet();
-		t_real im = static_cast<TimeContinuousAmplitudeContinuousReal *>(inputSignals[1])->bufferGet();
+		inputSignals[0]->bufferGet(&re);
+		inputSignals[1]->bufferGet(&im);
 
 		complex<t_real> myComplex( re, im);
 

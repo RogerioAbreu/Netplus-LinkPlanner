@@ -46,7 +46,7 @@ bool MQamMapper::runBlock(void) {
 	int binaryValue;
 	int nBinaryValues = (int)log2(m);
 	for (int i = 0; i < length; i++) {
-		binaryValue = static_cast<Binary *>(inputSignals[0])->bufferGet();
+		inputSignals[0]->bufferGet(&binaryValue);
 		auxSignalNumber = auxSignalNumber + (int) pow(2, nBinaryValues - 1 - auxBinaryValue) * binaryValue;
 		auxBinaryValue++;
 		if (auxBinaryValue == nBinaryValues) {

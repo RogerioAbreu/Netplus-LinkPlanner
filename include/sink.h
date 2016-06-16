@@ -5,14 +5,25 @@
 
 class Sink : public Block {
 
+	/* State Variables */
+
+	bool displayNumberOfSamples{ false };
+
 public:
+
+	/* Input Parameters */
+
+	long int numberOfSamples{ -1 };
+
+	/* Methods */
+
 	Sink(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
 
 	bool runBlock(void);
 
-	long int numberOfSamples{ -1 };
-
 	void setNumberOfSamples(long int nOfSamples){ numberOfSamples = nOfSamples; };
+
+	void setDisplayNumberOfSamples(bool opt) { displayNumberOfSamples = opt; };
 
 };
 

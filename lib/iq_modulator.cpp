@@ -31,10 +31,11 @@ bool IqModulator::runBlock(void) {
 
 	if (process == 0) return false;
 
+	t_real re, im;
 	for (int i = 0; i < process; i++) {
 
-		t_real re = static_cast<TimeContinuousAmplitudeContinuousReal *>(inputSignals[0])->bufferGet();
-		t_real im = static_cast<TimeContinuousAmplitudeContinuousReal *>(inputSignals[1])->bufferGet();
+		inputSignals[0]->bufferGet(&re);
+		inputSignals[1]->bufferGet(&im);
 
 		complex<t_real> myComplex( re, im);
 
