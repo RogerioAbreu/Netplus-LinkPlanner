@@ -11,15 +11,20 @@ class IqModulator : public Block {
 
 	 /* Input Parameters */
 
-	 t_real outputOpticalPower{ 1e-3 };
+	 double outputOpticalPower{ 1e-3 };
+	 double outputOpticalWavelength{ 1550e-9 };
+	 double outputOpticalFrequency{ SPEED_OF_LIGHT / outputOpticalWavelength };
 
 	 /* Methods */
 
 	 IqModulator(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
 	 bool runBlock(void);
 
-	 void setOutputOpticalPower(t_real outOpticalPower) { outputOpticalPower = outOpticalPower; }
-	 void setOutputOpticalPower_dBm(t_real outOpticalPower_dBm) { outputOpticalPower = 1e-3*pow(10,outOpticalPower_dBm/10); }
+	 void setOutputOpticalPower(double outOpticalPower) { outputOpticalPower = outOpticalPower; }
+	 void setOutputOpticalPower_dBm(double outOpticalPower_dBm) { outputOpticalPower = 1e-3*pow(10, outOpticalPower_dBm / 10); }
+
+	 void setOutputOpticalWavelength(double outOpticalWavelength) { outputOpticalWavelength = outOpticalWavelength; outputOpticalFrequency = SPEED_OF_LIGHT / outOpticalWavelength; }
+	 void setOutputOpticalFrequency(double outOpticalFrequency) { outputOpticalFrequency = outOpticalFrequency; outputOpticalWavelength = outOpticalFrequency / outputOpticalFrequency; }
 };
 
 # endif // PROGRAM_INCLUDE_NETPLUS_H_
