@@ -17,6 +17,10 @@ IqModulator::IqModulator(vector <Signal *> &InputSig, vector <Signal *> &OutputS
 
   outputSignals[0]->symbolPeriod = inputSignals[0]->symbolPeriod;
   outputSignals[0]->samplingPeriod = inputSignals[0]->samplingPeriod;
+
+  outputSignals[0]->centralWavelength = outputOpticalWavelength;
+  outputSignals[0]->centralFrequency = outputOpticalFrequency;
+
 }
 
 bool IqModulator::runBlock(void) {
