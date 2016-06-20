@@ -59,10 +59,10 @@ bool MQamTransmitter::runBlock() {
 		int space = outputSignals[0]->space();
 		int length = (ready <= space) ? ready : space;
 
-		t_complex value;
+		t_complex signalValue;
 		for (int i = 0; i < length; i++) {
-				ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0]->bufferGet(&value);
-				outputSignals[0]->bufferPut(value);
+				ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0]->bufferGet(&signalValue);
+				outputSignals[0]->bufferPut(signalValue);
 		}
 		
 

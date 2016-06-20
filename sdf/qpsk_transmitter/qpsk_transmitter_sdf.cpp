@@ -42,6 +42,7 @@ int main(){
 	B1.setNumberOfBits(10000);
 	
 	MQamMapper B2{ vector<Signal*> { &S1 }, vector<Signal*> { &S2, &S3 } };
+	B2.setIqAmplitudes({ { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 } });
 
 	DiscreteToContinuousTime B3{ vector<Signal*> { &S2 }, vector<Signal*> { &S4 } };
 	B3.setNumberOfSamplesPerSymbol(16);
@@ -58,9 +59,14 @@ int main(){
 	IqModulator B7{ vector<Signal*> { &S6, &S7 }, vector<Signal*> { &S8 } };
 
 	Sink B8{ vector<Signal*> { &S8 }, vector<Signal*> {} };
+<<<<<<< HEAD
+	B8.setDisplayNumberOfSamples(true);
+
+=======
 	B8.setNumberOfSamples(5000);
 	B8.setDisplayNumberOfSamples(true);
 	
+>>>>>>> refs/remotes/origin/master
 	// #####################################################################################################
 	// ########################### System Declaration and Inicialization ###################################
 	// #####################################################################################################
