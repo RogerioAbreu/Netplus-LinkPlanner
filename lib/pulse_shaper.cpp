@@ -63,7 +63,8 @@ bool PulseShaper::runBlock(void) {
 	if (process == 0) return false;
 
 	for (int i = 0; i < process; i++) {
-		t_real val = static_cast<TimeContinuousAmplitudeContinuousReal *>(inputSignals[0])->bufferGet();
+		t_real val;
+		(inputSignals[0])->bufferGet(&val);
 		if (val != 0) {
 			vector<t_real> aux(impulseResponseLength, 0.0);
 			transform(impulseResponse.begin(), impulseResponse.end(), aux.begin(), bind1st(multiplies<t_real>(), val));

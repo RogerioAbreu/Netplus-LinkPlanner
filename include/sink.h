@@ -7,6 +7,7 @@ class Sink : public Block {
 
 	/* State Variables */
 
+<<<<<<< HEAD
 public:
 
 	/* Input Parameters */
@@ -17,12 +18,31 @@ public:
 	/* Methods */
 
 	Sink(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
+=======
+	bool displayNumberOfSamples{ false };
+
+public:
+>>>>>>> refs/remotes/origin/master
+
+	/* Input Parameters */
+
+<<<<<<< HEAD
+	void setNumberOfSamples(long int nOfSamples){ numberOfSamples = nOfSamples; };
+
+	void setDisplayNumberOfSamples(bool option){ displayNumberOfSamples = option; };
+=======
+	long int numberOfSamples{ -1 };
+
+	/* Methods */
+
+	Sink(vector<Signal *> &InputSig, vector<Signal *> &OutputSig);
 
 	bool runBlock(void);
 
 	void setNumberOfSamples(long int nOfSamples){ numberOfSamples = nOfSamples; };
 
-	void setDisplayNumberOfSamples(bool option){ displayNumberOfSamples = option; };
+	void setDisplayNumberOfSamples(bool opt) { displayNumberOfSamples = opt; };
+>>>>>>> refs/remotes/origin/master
 
 };
 

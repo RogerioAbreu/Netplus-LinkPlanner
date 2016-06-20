@@ -27,7 +27,6 @@ const double SPEED_OF_LIGHT = 299792458;
 //############################################################## SIGNALS DECLARATION AND DEFINITION ######################################################
 //########################################################################################################################################################
 
-
 // Root class for signals
 class Signal {
 							
@@ -66,16 +65,12 @@ public:
 		if (inPosition == outPosition) bufferFull = true;
 	};
 
-/*	template<class T>
-	T * bufferGet() {
-		T value = static_cast<T *>(buffer)[outPosition];
-		if (bufferFull) bufferFull = false;
-		outPosition++;
-		if (outPosition == bufferLength) outPosition = 0;
-		if (outPosition == inPosition) bufferEmpty = true;
-		return (value);
-	}*/
-
+	void bufferGet();
+	void bufferGet(t_binary *valueAddr);
+	void bufferGet(t_integer *valueAddr);
+	void bufferGet(t_real *valueAddr);
+	void bufferGet(t_complex *valueAddr);
+	
 	void setType(string sType) { type = sType; };
 	string getType(){ return type; };
 
@@ -149,15 +144,6 @@ public:
 	TimeDiscreteAmplitudeDiscreteReal(string fName, int bLength) { setType("TimeDiscreteAmplitudeDiscreteReal"); setFileName(fName); setBufferLength(bLength);  buffer = new t_real[bLength]; }
 	TimeDiscreteAmplitudeDiscreteReal(int bLength) { setType("TimeDiscreteAmplitudeDiscreteReal"); setBufferLength(bLength); buffer = new t_real[bLength]; }
 	TimeDiscreteAmplitudeDiscreteReal(){ setType("TimeDiscreteAmplitudeDiscreteReal"); if (buffer == nullptr) buffer = new t_real[bufferLength]; }
-
-	t_real bufferGet() {
-		t_real value = static_cast<t_real *>(buffer)[outPosition];
-		if (bufferFull) bufferFull = false;
-		outPosition++;
-		if (outPosition == bufferLength) outPosition = 0;
-		if (outPosition == inPosition) bufferEmpty = true;
-		return (value);
-	}
 };
 
 
@@ -176,15 +162,6 @@ public:
 	Binary(int bLength) { setType("Binary");  setBufferLength(bLength); buffer = new t_binary[bLength]; }
 	Binary() { setType("Binary"); if (buffer == nullptr) buffer = new t_binary[bufferLength]; }
 
-	t_binary bufferGet() {
-		t_binary value = static_cast<t_binary *>(buffer)[outPosition];
-		if (bufferFull) bufferFull = false;
-		outPosition++;
-		if (outPosition == bufferLength) outPosition = 0;
-		if (outPosition == inPosition) bufferEmpty = true;
-		return (value);
-	}
-
 };
 
 
@@ -194,6 +171,7 @@ public:
 	TimeDiscreteAmplitudeContinuousReal(string fName, int bLength) { setType("TimeDiscreteAmplitudeContinuousReal"); setFileName(fName); setBufferLength(bLength); buffer = new t_real[bLength]; }
 	TimeDiscreteAmplitudeContinuousReal(int bLength) { setType("TimeDiscreteAmplitudeContinuousReal"); setBufferLength(bLength); buffer = new t_real[bLength]; }
 	TimeDiscreteAmplitudeContinuousReal(){ setType("TimeDiscreteAmplitudeContinuousReal"); if (buffer == nullptr) buffer = new t_real[bufferLength]; }
+
 };
 
 
@@ -203,6 +181,7 @@ public:
 	TimeDiscreteAmplitudeContinuousComplex(string fName, int bLength) { setType("TimeDiscreteAmplitudeContinuousComplex"); setFileName(fName); setBufferLength(bLength); buffer = new t_complex[bLength]; }
 	TimeDiscreteAmplitudeContinuousComplex(int bLength) { setType("TimeDiscreteAmplitudeContinuousComplex"); setBufferLength(bLength); buffer = new t_complex[bLength]; }
 	TimeDiscreteAmplitudeContinuousComplex(){ setType("TimeDiscreteAmplitudeContinuousComplex"); if (buffer == nullptr) buffer = new t_complex[bufferLength]; }
+
 };
 
 
@@ -230,6 +209,7 @@ public:
 	TimeContinuousAmplitudeDiscreteReal(string fName, int bLength) { setType("TimeContinuousAmplitudeDiscreteReal");  setFileName(fName); setBufferLength(bLength); buffer = new t_real[bLength]; }
 	TimeContinuousAmplitudeDiscreteReal(int bLength) { setType("TimeContinuousAmplitudeDiscreteReal");  setBufferLength(bLength); buffer = new t_real[bLength]; }
 	TimeContinuousAmplitudeDiscreteReal(){ setType("TimeContinuousAmplitudeDiscreteReal"); if (buffer == nullptr) buffer = new t_real[bufferLength]; }
+
 };
 
 
@@ -239,6 +219,7 @@ public:
 	TimeContinuousAmplitudeDiscreteComplex(string fName, int bLength) { setType("TimeContinuousAmplitudeDiscreteComplex"); setFileName(fName); setBufferLength(bLength); buffer = new t_complex[bLength]; }
 	TimeContinuousAmplitudeDiscreteComplex(int bLength) { setType("TimeContinuousAmplitudeDiscreteComplex"); setBufferLength(bLength); buffer = new t_complex[bLength]; }
 	TimeContinuousAmplitudeDiscreteComplex(){ setType("TimeContinuousAmplitudeDiscreteComplex"); if (buffer == nullptr) buffer = new t_complex[bufferLength]; }
+
 };
 
 
@@ -249,14 +230,6 @@ public:
 	TimeContinuousAmplitudeContinuousReal(int bLength) { setType("TimeContinuousAmplitudeContinuousReal"); setBufferLength(bLength); buffer = new t_real[bLength]; }
 	TimeContinuousAmplitudeContinuousReal(){ setType("TimeContinuousAmplitudeContinuousReal"); if (buffer == nullptr) buffer = new t_real[bufferLength]; }
 
-	t_real bufferGet() {
-		t_real value = static_cast<t_real *>(buffer)[outPosition];
-		if (bufferFull) bufferFull = false;
-		outPosition++;
-		if (outPosition == bufferLength) outPosition = 0;
-		if (outPosition == inPosition) bufferEmpty = true;
-		return (value);
-	}
 };
 
 
@@ -267,14 +240,7 @@ public:
 	TimeContinuousAmplitudeContinuousComplex(int bLength) { setType("TimeContinuousAmplitudeContinuousComplex"); setBufferLength(bLength); buffer = new t_complex[bLength]; }
 	TimeContinuousAmplitudeContinuousComplex(){ setType("TimeContinuousAmplitudeContinuousComplex"); if (buffer == nullptr) buffer = new t_complex[bufferLength]; }
 
-	t_complex bufferGet() {
-		t_complex value = static_cast<t_complex *>(buffer)[outPosition];
-		if (bufferFull) bufferFull = false;
-		outPosition++;
-		if (outPosition == bufferLength) outPosition = 0;
-		if (outPosition == inPosition) bufferEmpty = true;
-		return (value);
-	}
+
 };
 
 class BandpassSignal : public TimeContinuousAmplitudeContinuousComplex {
@@ -291,7 +257,7 @@ public:
 	double getCentralFrequency(){ return centralFrequency; };
 
 	void setCentralWavelength(double cWavelength){ centralWavelength = cWavelength; centralFrequency = SPEED_OF_LIGHT / centralWavelength; }
-	double getCentralWavelength(){ return centralWavelength; };
+	double getCentralWavelength(){ return centralWavelength; }
 
 private:
 	double centralFrequency{ SPEED_OF_LIGHT / 1550E-9 };

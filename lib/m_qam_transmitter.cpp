@@ -46,7 +46,9 @@ bool MQamTransmitter::runBlock() {
 
 	bool Continue{ true };
 	do {
+
 		Continue = false;
+
 		for (unsigned int i = 0; i < ModuleBlocks.size(); i++) {
 			bool aux = ModuleBlocks[i]->runBlock();
 			Continue = (Continue || aux);
@@ -55,9 +57,14 @@ bool MQamTransmitter::runBlock() {
 
 		int ready = ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0]->ready();
 		int space = outputSignals[0]->space();
-		int length = (ready <= space) ? ready : space; 
-		for (int i = 0; i < length; i++)
-			outputSignals[0]->bufferPut(static_cast<BandpassSignal *>(ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0])->bufferGet());
+		int length = (ready <= space) ? ready : space;
+
+		t_complex value;
+		for (int i = 0; i < length; i++) {
+				ModuleBlocks[ModuleBlocks.size() - 1]->outputSignals[0]->bufferGet(&value);
+				outputSignals[0]->bufferPut(value);
+		}
+		
 
 	} while (Continue);
 

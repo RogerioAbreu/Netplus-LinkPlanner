@@ -25,6 +25,8 @@ int main(){
 	B1.setSaveInternalSignals(true);
 
 	Sink B2{ vector<Signal*> { &S1 }, vector<Signal*> {} };
+	B2.setNumberOfSamples(5000);
+	B2.setDisplayNumberOfSamples(true);
 
 	// #####################################################################################################
 	// ########################### System Declaration and Inicialization ###################################
