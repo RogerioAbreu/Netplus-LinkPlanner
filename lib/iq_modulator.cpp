@@ -39,6 +39,8 @@ bool IqModulator::runBlock(void) {
 
 		complex<t_real> myComplex( re, im);
 
+		myComplex = .5*sqrt(outputOpticalPower)*myComplex;
+
 		outputSignals[0]->bufferPut(myComplex);
 	}
 

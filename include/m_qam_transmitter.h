@@ -87,6 +87,9 @@ public:
 
 	void setRollOffFactor(double rOffFactor){ B5.rollOffFactor = rOffFactor; B6.rollOffFactor = rOffFactor; };
 
+	void setOutputOpticalPower(t_real outOpticalPower) { B7.outputOpticalPower = outOpticalPower; };
+	void setOutputOpticalPower_dBm(t_real outOpticalPower_dBm) { B7.outputOpticalPower = 1e-3*pow(10, outOpticalPower_dBm / 10); };
+
 	void setSaveInternalSignals(bool sSignals);
 
 };
