@@ -78,13 +78,11 @@ int Signal::ready() {
 
 void Signal::writeHeader(){
 
-	string signalPath{ "signals" };
-
 	ofstream headerFile;
 
 	if (!fileName.empty()) {
 
-		headerFile.open("./" + signalPath + "/" + fileName, ios::out);
+		headerFile.open("./" + folderName + "/" + fileName, ios::out);
 
 		headerFile << "Signal type: " << type << "\n";
 		headerFile << "Symbol Period (s): " << symbolPeriod << "\n";

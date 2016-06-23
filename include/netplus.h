@@ -31,24 +31,22 @@ const double SPEED_OF_LIGHT = 299792458;
 
 // Root class for signals
 class Signal {
-
-
-	string type;									// Signal type
-	signal_value_type valueType;
-
-	string fileName{ "" };							// Name of the file where data values are going to be saved
-
-	long int firstValueToBeSaved{ 1 };				// First value (>= 1) to be saved
-	long int numberOfValuesToBeSaved{ -1 };			// Number of values to be saved, if -1 all values are going to be saved
-
-	
 							
 public:
 
 	/* Parameters */
 
-	int inPosition{ 0 };							// Next position to the inputed values
-	int outPosition{ 0 };							// Next position to the outputed values
+	string type;									// Signal type
+	signal_value_type valueType;					// Signal samples type
+
+	string fileName{ "" };							// Name of the file where data values are going to be saved
+	string folderName{ "signal" };					// folder where signals are going to be saved by default
+
+	long int firstValueToBeSaved{ 1 };				// First value (>= 1) to be saved
+	long int numberOfValuesToBeSaved{ -1 };			// Number of values to be saved, if -1 all values are going to be saved
+
+	int inPosition{ 0 };							// Next position for the input values
+	int outPosition{ 0 };							// Next position for the output values
 	bool bufferEmpty{ true };						// Flag bufferEmpty
 	bool bufferFull{ false };						// Flag bufferFull
 	long int numberOfSavedValues{ 0 };				// Number of saved values
@@ -107,10 +105,17 @@ public:
 	void virtual bufferGet(t_complex *valueAddr);
 	
 	void setType(string sType, signal_value_type vType) { type = sType; valueType = vType; };
+	void setType(string sType) { type = sType; };
 	string getType(){ return type; };
+
+	void setValueType(signal_value_type vType) { valueType = vType; };
+	signal_value_type getValueType(){ return valueType; };
 
 	void setFileName(string fName) { fileName = fName; };
 	string getFileName(){ return fileName; };
+
+	void setFolderName(string fName) { folderName = fName; };
+	string getFolderName(){ return folderName; };
 	
 	void setBufferLength(int bLength) { bufferLength = bLength; };
 	int getBufferLength(){ return bufferLength; };
