@@ -59,14 +59,9 @@ int main(){
 	IqModulator B7{ vector<Signal*> { &S6, &S7 }, vector<Signal*> { &S8 } };
 
 	Sink B8{ vector<Signal*> { &S8 }, vector<Signal*> {} };
-<<<<<<< HEAD
-	B8.setDisplayNumberOfSamples(true);
-
-=======
 	B8.setNumberOfSamples(5000);
 	B8.setDisplayNumberOfSamples(true);
-	
->>>>>>> refs/remotes/origin/master
+
 	// #####################################################################################################
 	// ########################### System Declaration and Inicialization ###################################
 	// #####################################################################################################
