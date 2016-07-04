@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Universidade\Investigacao\Netplus\GitHub\Netplus\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Universidade\Investigacao\Netplus\GitHub\Netplus-LinkPlanner\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
