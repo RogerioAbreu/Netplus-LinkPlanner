@@ -57,12 +57,13 @@ class MQamTransmitter : public Block {
 
 	vector<Block*> ModuleBlocks;
 	bool firstTime{ true };
+	int buffersLength{ 512 };
 
 public:
 
 	/* Input Parameters */
 
-	bool saveInternalSignals{ false };
+	bool saveInternalSignals{ true };
 
 	/* Methods */
 
@@ -78,12 +79,13 @@ public:
 	void setBitStream(string bStream) { B1.bitStream = bStream; }
 	void setNumberOfBits(long int nOfBits) { B1.numberOfBits = nOfBits; }
 	void setPatternLength(int pLength) { B1.patternLength = pLength; }
-	void setBitPeriod(double bPeriod) { B1.bitPeriod = bPeriod;	S1.symbolPeriod = bPeriod; S1.samplingPeriod = bPeriod; };
+	void setBitPeriod(double bPeriod);
+	void setBuffersLength(int bLength);
 
 	void setM(int mValue){B2.m = mValue;};
 	void setIqAmplitudes(vector<t_iqValues> iqAmplitudesValues){ B2.m = iqAmplitudesValues.size(); B2.iqAmplitudes.resize(B2.m); B2.iqAmplitudes = iqAmplitudesValues; };
 	
-	void setNumberOfSamplesPerSymbol(int n) { B3.numberOfSamplesPerSymbol = n;  B4.numberOfSamplesPerSymbol = n; };
+	void setNumberOfSamplesPerSymbol(int n);
 
 	void setRollOffFactor(double rOffFactor){ B5.rollOffFactor = rOffFactor; B6.rollOffFactor = rOffFactor; };
 

@@ -50,8 +50,10 @@ bool MQamMapper::runBlock(void) {
 		auxSignalNumber = auxSignalNumber + (int) pow(2, nBinaryValues - 1 - auxBinaryValue) * binaryValue;
 		auxBinaryValue++;
 		if (auxBinaryValue == nBinaryValues) {
-			outputSignals[0]->bufferPut(iqAmplitudes[auxSignalNumber].i);
-			outputSignals[1]->bufferPut(iqAmplitudes[auxSignalNumber].q);
+			t_real auxI = iqAmplitudes[auxSignalNumber].i;
+			t_real auxQ = iqAmplitudes[auxSignalNumber].q;
+			outputSignals[0]->bufferPut((t_real)auxI);
+			outputSignals[1]->bufferPut((t_real)auxQ);
 			auxBinaryValue = 0;
 			auxSignalNumber = 0;
 		}

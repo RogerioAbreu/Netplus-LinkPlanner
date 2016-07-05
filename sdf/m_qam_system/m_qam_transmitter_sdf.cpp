@@ -19,14 +19,14 @@ int main(){
 	B1.setBitPeriod(1.0 / 50e9);
 	B1.setPatternLength(5);
 	B1.setNumberOfBits(10000);
-	B1.setNumberOfSamplesPerSymbol(16);
-	B1.setRollOffFactor(0.3);
-	B1.setIqAmplitudes({ { 1, 0 }, { -1, 0 } });
+	B1.setNumberOfSamplesPerSymbol(32);
+	B1.setRollOffFactor(0.9);
+	B1.setIqAmplitudes({ { 1, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 } });
 	B1.setOutputOpticalPower_dBm(0);
 	B1.setSaveInternalSignals(true);
 
 	Sink B2{ vector<Signal*> { &S1 }, vector<Signal*> {} };
-	B2.setNumberOfSamples(5000);
+	B2.setNumberOfSamples(32000);
 	B2.setDisplayNumberOfSamples(true);
 
 	// #####################################################################################################

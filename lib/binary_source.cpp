@@ -64,8 +64,8 @@ bool BinarySource::runBlock(void) {
 		vector<int>& ac = acumul;
 
 		for (int k = 0; k < process; k++) {
-
-			outputSignals[0]->bufferPut((t_binary)ac[len]);
+			t_binary aux = (t_binary)ac[len];
+			outputSignals[0]->bufferPut((t_binary) aux);
 			numberOfBits--;
 
 			for (int i = len; i > 0; --i) ac[i] = ac[i - 1];
@@ -189,7 +189,8 @@ bool BinarySource::runBlock(void) {
 		std::vector<char> values(bitStream.begin(), bitStream.end());
 		int valuesSize = values.size();
 		for (int k = 0; k < process; k++) {
-			outputSignals[0]->bufferPut((t_binary)(values[posBitStream++] - '0'));
+			t_binary aux = (t_binary)(values[posBitStream++] - '0');
+			outputSignals[0]->bufferPut(aux);
 			numberOfBits--;
 			posBitStream = posBitStream % valuesSize;
 		}

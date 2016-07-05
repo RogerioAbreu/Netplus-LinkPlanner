@@ -8,15 +8,16 @@
 # include <algorithm>
 # include <functional>
 
-# include "..\include\netplus.h"
-# include "..\include\pulse_shaper.h"
+# include "netplus.h"
+# include "pulse_shaper.h"
 
 using namespace std;
 
 PulseShaper::PulseShaper(vector<Signal *> &InputSig, vector<Signal *> OutputSig) {
 
+/* 2016-07-05  
   numberOfInputSignals = InputSig.size();
-  numberOfOutputSignals = OutputSig.size();
+  numberOfOutputSignals = OutputSig.size();*/
 
   inputSignals = InputSig;
   outputSignals = OutputSig;
@@ -24,6 +25,7 @@ PulseShaper::PulseShaper(vector<Signal *> &InputSig, vector<Signal *> OutputSig)
   outputSignals[0]->symbolPeriod = inputSignals[0]->symbolPeriod;
   outputSignals[0]->samplingPeriod = inputSignals[0]->samplingPeriod;
 
+/* 2016-07-05  
   if (impulseResponse.size() == 0) {
 
 	  double samplingPeriod = outputSignals[0]->samplingPeriod;
@@ -49,11 +51,50 @@ PulseShaper::PulseShaper(vector<Signal *> &InputSig, vector<Signal *> OutputSig)
 	  fileHandler.close();
 
 	  response.resize(impulseResponseLength, 0);
-  };
+  };*/
 
 }
 
 bool PulseShaper::runBlock(void) {
+
+	if (firstTime) {
+
+		firstTime = false;
+
+		if (impulseResponse.size() == 0) {
+
+			double samplingPeriod = outputSignals[0]->samplingPeriod;
+			double symbolPeriod = outputSignals[0]->symbolPeriod;
+			double samplesPerSymbol = outputSignals[0]->samplesPerSymbol;
+
+			impulseResponseLength = (int)floor(impulseResponseTimeLength * symbolPeriod / samplingPeriod);
+
+			impulseResponse.resize(impulseResponseLength);
+			double t, sinc;
+			ofstream fileHandler("./signals/" + impulseResponseFilename, ios::out);
+			fileHandler << "// ### HEADER TERMINATOR ###\n";
+			for (int i = 0; i < impulseResponseLength; i++) {
+				t = -impulseResponseLength / 2 * samplingPeriod + i * samplingPeriod;
+				if (t != 0) {
+					sinc = sin(PI * t / symbolPeriod) / (PI * t / symbolPeriod);
+				}
+				else {
+					sinc = 1;
+				}
+				impulseResponse[i] = sinc*cos(rollOffFactor*PI*t / symbolPeriod) / (1 - (4.0 * rollOffFactor * rollOffFactor * t * t) / (symbolPeriod * symbolPeriod));
+				fileHandler << t << " " << impulseResponse[i] << "\n";
+			};
+			fileHandler.close();
+
+			response.resize(impulseResponseLength, 0);
+
+			if (!seeTailOfImpulseResponse) {
+				int aux = (int)(samplesPerSymbol*(((double)impulseResponseTimeLength)/2) + 1);
+				outputSignals[0]->setFirstValueToBeSaved(aux);
+			}
+		};
+
+	}
 
 	int ready = inputSignals[0]->ready();
 	int space = outputSignals[0]->space();
