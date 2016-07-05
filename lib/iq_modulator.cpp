@@ -16,7 +16,6 @@ IqModulator::IqModulator(vector <Signal *> &InputSig, vector <Signal *> &OutputS
   outputSignals = OutputSig;
 
  /* 2016-07-05
- 
   outputSignals[0]->setSymbolPeriod(inputSignals[0]->getSymbolPeriod());
   outputSignals[0]->setSamplingPeriod(inputSignals[0]->getSamplingPeriod());
   outputSignals[0]->setFirstValueToBeSaved(inputSignals[0]->getFirstValueToBeSaved());
