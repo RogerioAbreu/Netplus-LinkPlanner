@@ -15,15 +15,32 @@ IqModulator::IqModulator(vector <Signal *> &InputSig, vector <Signal *> &OutputS
   inputSignals = InputSig;
   outputSignals = OutputSig;
 
-  outputSignals[0]->symbolPeriod = inputSignals[0]->symbolPeriod;
-  outputSignals[0]->samplingPeriod = inputSignals[0]->samplingPeriod;
+ /* 2016-07-05
+ 
+  outputSignals[0]->setSymbolPeriod(inputSignals[0]->getSymbolPeriod());
+  outputSignals[0]->setSamplingPeriod(inputSignals[0]->getSamplingPeriod());
+  outputSignals[0]->setFirstValueToBeSaved(inputSignals[0]->getFirstValueToBeSaved());
 
   outputSignals[0]->centralWavelength = outputOpticalWavelength;
-  outputSignals[0]->centralFrequency = outputOpticalFrequency;
+  outputSignals[0]->centralFrequency = outputOpticalFrequency;*/
 
 }
 
 bool IqModulator::runBlock(void) {
+
+	if (firstTime) {
+
+		firstTime = false;
+
+		outputSignals[0]->setSymbolPeriod(inputSignals[0]->getSymbolPeriod());
+		outputSignals[0]->setSamplingPeriod(inputSignals[0]->getSamplingPeriod());
+		int aux = inputSignals[0]->getFirstValueToBeSaved();
+		outputSignals[0]->setFirstValueToBeSaved(inputSignals[0]->getFirstValueToBeSaved());
+
+		outputSignals[0]->centralWavelength = outputOpticalWavelength;
+		outputSignals[0]->centralFrequency = outputOpticalFrequency;
+
+	}
 
 	int ready0 = inputSignals[0]->ready();
 	int ready1 = inputSignals[1]->ready();

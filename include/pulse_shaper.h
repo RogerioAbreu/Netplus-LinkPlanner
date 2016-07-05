@@ -16,13 +16,16 @@ class PulseShaper : public Block {
 
 	vector<t_real> response;
 
+	bool firstTime{ true };
+	bool seeTailOfImpulseResponse{ false };
+
 public:
 
 	/* Input Parameters */
 
 	double rollOffFactor{ 0.9 };// Roll-off factor (roll)
 
-	int impulseResponseTimeLength{ 4 };  //in units of symbol period
+	int impulseResponseTimeLength{ 16 };  //in units of symbol period
 
 	int impulseResponseLength;
 

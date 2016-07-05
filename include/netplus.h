@@ -31,6 +31,8 @@ const double SPEED_OF_LIGHT = 299792458;
 
 // Root class for signals
 class Signal {
+
+	long int firstValueToBeSaved{ 1 };				// First value (>= 1) to be saved
 							
 public:
 
@@ -40,9 +42,9 @@ public:
 	signal_value_type valueType;					// Signal samples type
 
 	string fileName{ "" };							// Name of the file where data values are going to be saved
-	string folderName{ "signal" };					// folder where signals are going to be saved by default
+	string folderName{ "signals" };					// folder where signals are going to be saved by default
 
-	long int firstValueToBeSaved{ 1 };				// First value (>= 1) to be saved
+	
 	long int numberOfValuesToBeSaved{ -1 };			// Number of values to be saved, if -1 all values are going to be saved
 
 	int inPosition{ 0 };							// Next position for the input values
@@ -56,8 +58,9 @@ public:
 
 	int bufferLength{ 512 };						// Buffer length
 
-	double symbolPeriod;							// Signal symbol period (it is the inverse of the symbol rate)
-	double samplingPeriod;							// Signal sampling period (it is the time space between two samples)
+	double symbolPeriod{ 1 };										// Signal symbol period (it is the inverse of the symbol rate)
+	double samplingPeriod{ 1 };										// Signal sampling period (it is the time space between two samples)
+	double samplesPerSymbol{ symbolPeriod / samplingPeriod };		// samplesPerSymbol = symbolPeriod / samplingPeriod;
 
 	double centralWavelength{ 1550E-9 };
 	double centralFrequency{ SPEED_OF_LIGHT / centralWavelength };
@@ -66,6 +69,7 @@ public:
 	/* Methods */
 
 	Signal(string fName) {setFileName(fName); };	// Signal constructor
+	Signal(int bLength) { setBufferLength(bLength); };
 	Signal() {};									// Signal constructor
 
 	~Signal(){ delete buffer; };					// Signal destructor
@@ -86,7 +90,8 @@ public:
 			if (firstValueToBeSaved <= bufferLength) {
 				char *ptr = (char *) buffer;
 				ptr = ptr + (firstValueToBeSaved - 1)*sizeof(T);
-				ofstream fileHandler("./signals/" + fileName, ios::out | ios::binary | ios::app);
+				ofstream fileHandler("./" + folderName + "/" + fileName, ios::out | ios::binary | ios::app);
+				int auxSizeOf = sizeof(T);
 				fileHandler.write(ptr, (bufferLength - (firstValueToBeSaved - 1 ))* sizeof(T));
 				fileHandler.close();
 				firstValueToBeSaved = 1;
@@ -126,11 +131,14 @@ public:
 	void setNumberOfValuesToBeSaved(long int nOfValuesToBeSaved) { numberOfValuesToBeSaved = nOfValuesToBeSaved; };
 	long int getNumberOfValuesToBeSaved(){ return numberOfValuesToBeSaved; };
 
-	void setSymbolPeriod(double sPeriod) { symbolPeriod = sPeriod; };
+	void setSymbolPeriod(double sPeriod) { symbolPeriod = sPeriod; samplesPerSymbol = symbolPeriod / samplingPeriod; };
 	double getSymbolPeriod() { return symbolPeriod; };
 
-	void setSamplingPeriod(double sPeriod) { samplingPeriod = sPeriod; };
+	void setSamplingPeriod(double sPeriod) { samplingPeriod = sPeriod; samplesPerSymbol = symbolPeriod / samplingPeriod; };
 	double getSamplingPeriod(){ return samplingPeriod; };
+
+	void setSamplesPerSymbol(double sPeriod) { samplesPerSymbol = sPeriod; symbolPeriod = samplesPerSymbol * samplingPeriod; samplingPeriod = symbolPeriod / samplesPerSymbol; };
+	double getSamplesPerSymbol(){ return samplesPerSymbol; };
 
 	void setCentralFrequency(double cFrequency){ centralFrequency = cFrequency; centralWavelength = SPEED_OF_LIGHT / centralFrequency; }
 	double getCentralFrequency(){ return centralFrequency; };

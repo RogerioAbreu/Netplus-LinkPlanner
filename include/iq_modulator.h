@@ -7,6 +7,11 @@
 
 // Implements a IQ modulator.
 class IqModulator : public Block {
+
+	/* State Variables */
+
+	bool firstTime{ true };
+
  public:
 
 	 /* Input Parameters */

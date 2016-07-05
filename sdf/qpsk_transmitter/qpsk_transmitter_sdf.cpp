@@ -42,7 +42,7 @@ int main(){
 	B1.setNumberOfBits(10000);
 	
 	MQamMapper B2{ vector<Signal*> { &S1 }, vector<Signal*> { &S2, &S3 } };
-	B2.setIqAmplitudes({ { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 } });
+	//B2.setIqAmplitudes({ { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 } });
 
 	DiscreteToContinuousTime B3{ vector<Signal*> { &S2 }, vector<Signal*> { &S4 } };
 	B3.setNumberOfSamplesPerSymbol(16);
